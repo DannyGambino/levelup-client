@@ -6,10 +6,18 @@ export const NavBar = () => {
     return (
         <ul className="navbar">
             <li className="navbar__item">
-                Navigation link
+            <button className="nav-link fakeLink"
+                            onClick={() => {
+                                navigate('/games')
+                            }}
+                        >Games</button>
             </li>
             <li className="navbar__item">
-                Navigation link
+            <button className="nav-link fakeLink"
+                            onClick={() => {
+                                navigate('/events')
+                            }}
+                        >Events</button>
             </li>
             <li className="navbar__item">
                 Navigation link
