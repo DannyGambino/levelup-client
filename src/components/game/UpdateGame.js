@@ -1,18 +1,20 @@
 import { useState, useEffect } from "react"
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { getGameTypes, getGames, updateGame } from "../../managers/GameManager"
 
 export const UpdateGameForm = () => {
     const navigate = useNavigate()
     const [gameTypes, setGameTypes] = useState([])
-    const [games, setGameUpdate] = useState([])
+    const [games, setGame] = useState([])
+    const { gameId } = useParams()
+    
 
     const [currentGame, setCurrentGame] = useState({
+        id: gameId,
         skillLevel: "",
         playersNeeded: 0,
         name: "",
-        gameTypeId: 0,
-        gamerId: 0
+        gameType: 0,
     })
 
     useEffect(() => {
@@ -24,24 +26,16 @@ export const UpdateGameForm = () => {
 
     useEffect(() => {
         getGames()
-        .then(gameData => setGameUpdate(gameData))
+        .then(gameData => setGame(gameData.filter(game => parseInt(gameId) === parseInt(game.id))))
     }, [])
 
     const updateGameState = (domEvent) => {
         const updatedState = { ...currentGame }
+        console.log(updatedState)
         updatedState [domEvent.target.name] = domEvent.target.value
+        updatedState.id = currentGame.id
         setCurrentGame(updatedState)
     }
-
-    // const gameDisplay = () => {  
-    //         games.map(game => {
-    //             return <>
-    //             <section key={`game--${game.id}`} className="game">
-    //                 <h2 className="game__title">{game.name}</h2>
-    //             </section>
-    //             </>
-    //         })
-    // }
 
     return (
         <form className="gameForm">
@@ -85,7 +79,7 @@ export const UpdateGameForm = () => {
             </fieldset>
             <fieldset>
                 <div className="form-group">
-                    <label htmlFor="gameTypeId">Game Type: </label>
+                    <label htmlFor="gameType">Game Type: </label>
                     <select name="gameType" className="form-control"
                         value={currentGame.gameType}
                         onChange={updateGameState}>
@@ -109,12 +103,13 @@ export const UpdateGameForm = () => {
                     evt.preventDefault()
 
                     const game = {
+                        id: currentGame.id,
                         name: currentGame.name,
                         players_needed: parseInt(currentGame.playersNeeded),
                         skill_level: currentGame.skillLevel,
-                        game_type: parseInt(currentGame.gameType)
+                        game_type: parseInt(currentGame.gameType),
                     }
-
+console.log(game)
                     // Send POST request to your API
                     updateGame(game)
                         .then(() => navigate("/games"))

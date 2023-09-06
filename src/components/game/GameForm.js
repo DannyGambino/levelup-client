@@ -18,7 +18,6 @@ export const GameForm = () => {
         playersNeeded: 0,
         name: "",
         gameType: 0,
-        gamerId: 0
     })
 
     useEffect(() => {
